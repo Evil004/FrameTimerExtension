@@ -86,7 +86,7 @@ class HTMLSegmentFactory {
         let segmentText = this.createTimeSegmentElement(segment);
         let resetButton = this.createResetSegmentButton();
         let removeButton = this.createRemoveButton();
-        let tooltip = this.createTooltip(segment);
+        let tooltip = this.createTooltip();
 
         segmentElement.appendChild(segmentText);
         segmentElement.appendChild(resetButton);
@@ -94,13 +94,13 @@ class HTMLSegmentFactory {
         segmentText.appendChild(tooltip);
 
         segmentElement.addEventListener("mouseover", () => {
-            tooltip.querySelector(".startValue")!.textContent = Time.fromSeconds(segment.startTime, getFramerate()).toString();
+            tooltip.querySelector(".startValue")!.textContent = segment.endTime ? Time.fromSeconds(segment.startTime, getFramerate()).toString(): "Not Set";
             tooltip.querySelector(".endValue")!.textContent = segment.endTime ? Time.fromSeconds(segment.endTime, getFramerate()).toString() : "Not Set";
 
             let segmentRect = segmentElement.getBoundingClientRect();
             let tooltipRect = tooltip.getBoundingClientRect();
 
-            tooltip.style.left = segmentRect.left + 'px';
+            tooltip.style.left = segmentRect.left + 'px';   
             tooltip.style.top = segmentRect.bottom - tooltipRect.height- segmentRect.height - 3  + 'px';
 
 
@@ -189,7 +189,7 @@ class HTMLSegmentFactory {
         return removeButton;
     }
 
-    static createTooltip(segment: Segment): HTMLSpanElement {
+    static createTooltip(): HTMLSpanElement {
         let tooltip = document.createElement("span");
         tooltip.classList.add("tooltip");
 
