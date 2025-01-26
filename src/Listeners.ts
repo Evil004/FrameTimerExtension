@@ -1,6 +1,8 @@
 let browserAction = new ScriptsComunicator();
 let browserController = BrowserFactory.getBrowser();
 
+
+
 window.onload = async () => {
     let response = await browserController.getFromStorage("data")
 
@@ -9,13 +11,13 @@ window.onload = async () => {
     browserAction.sendOpenedExtensionMessage()
 }
 
-
-document.addEventListener("change", saveOnChange);
 document.addEventListener("click", (e) => {
     saveOnChange(e);
 
     NotificationManager.removeNotification();
-});
+}, true);
+document.addEventListener("change", saveOnChange);
+
 document.addEventListener("input", saveOnChange);
 
 
@@ -83,45 +85,16 @@ BUTTONS.resetAllBtn.addEventListener('click', async (e) => {
 });
 
 BUTTONS.addSegmentBtn.addEventListener('click', async (e) => {
-    segmentList.addSegment(HTMLSegmentFactory.createSegmentElement(new SubtractiveSegment()));
-
+    segmentList.addSegment(HTMLSegmentFactory.createSegmentElement(ModeManager.getCurrentMode().getSegment()));
 });
 
-BUTTONS.setStartTimeBtn.addEventListener('click', async (e) => {
-
-
-
-    try {
-        let time = parseFloat(ELEMENTS.videoTimeInput.value);
-        if (segmentList.getSelectedSegment().segment.startTime  && segmentList.getSelectedSegment().segment.startTime != time) {
-            if (!await NotificationManager.showWarningModal("Are you sure you want to overwrite the start time?")) {
-                return;
-            }
-        }
-        segmentList.setSelectedSegmentStartTime(time);
-        NotificationManager.setInfoNotification("Start time set!");
-    } catch (e: any) {
-        NotificationManager.setErrorNotification(e.message);
-    }
+BUTTONS.setStartTimeBtn.addEventListener('click', async () => {
+    ModeManager.getCurrentMode().setStartTime();
 })
 
 BUTTONS.setEndTimeBtn.addEventListener('click', async (e) => {
-
-    try {
-        let time = parseFloat(ELEMENTS.videoTimeInput.value);
-
-        if (segmentList.getSelectedSegment().segment.endTime && segmentList.getSelectedSegment().segment.endTime != time) {
-            if (!await NotificationManager.showWarningModal("Are you sure you want to overwrite the end time?")) {
-                return;
-            }
-        }
-        segmentList.setSelectedSegmentEndTime(time);
-
-        NotificationManager.setInfoNotification("End time set!");
-    } catch (e: any) {
-        NotificationManager.setErrorNotification(e.message);
-    }
-})
+    ModeManager.getCurrentMode().setEndTime();
+});
 
 BUTTONS.setFramerateTo30Btn.addEventListener('click', async (e) => {
     ELEMENTS.framerateInput.value = "30";

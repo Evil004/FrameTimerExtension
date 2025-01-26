@@ -39,7 +39,6 @@ let respondToMessage = (request: any, _sender: any, sendResponse: (response?: an
             sendResponse();
             break;
         case "setTime":
-            console.log(request)
             try {
                 let {hours, minutes, seconds, milliseconds} = request.time;
 
@@ -64,7 +63,7 @@ let respondToMessage = (request: any, _sender: any, sendResponse: (response?: an
 
                 sendResponse({message: "success"});
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 sendResponse({message: "error"});
             }
             break;

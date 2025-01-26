@@ -11,7 +11,7 @@ interface Browser {
 class ChromeBrowser implements Browser {
     private getActiveTab(): Promise<chrome.tabs.Tab> {
         return new Promise((resolve) => {
-            chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 resolve(tabs[0]);
             });
         });
@@ -42,12 +42,12 @@ class ChromeBrowser implements Browser {
     }
 
     setToStorage(key: string, value: any): void {
-        chrome.storage.local.set({[key]: value});
+        chrome.storage.local.set({ [key]: value });
     }
 
     removeFromStorage(key: string): void {
         chrome.storage.local.remove(key).catch((error) => {
-            console.log(error);
+            console.error(error);
         });
     }
 }
@@ -56,7 +56,7 @@ class FirefoxBrowser implements Browser {
     private getActiveTab(): Promise<browser.tabs.Tab> {
         return new Promise((resolve) => {
             browser.tabs
-                .query({active: true, currentWindow: true})
+                .query({ active: true, currentWindow: true })
                 .then((tabs) => {
                     return resolve(tabs[0]);
                 });
@@ -90,7 +90,7 @@ class FirefoxBrowser implements Browser {
     }
 
     setToStorage(key: string, value: any): void {
-        browser.storage.local.set({[key]: value});
+        browser.storage.local.set({ [key]: value });
     }
 
     removeFromStorage(key: string): void {
@@ -119,12 +119,12 @@ class ScriptsComunicator {
 
     getVideoSeconds(): Promise<number> {
         return this.messageSender
-            .sendMessage({action: "getExactTime"})
+            .sendMessage({ action: "getExactTime" })
 
     }
 
     sendOpenedExtensionMessage() {
-        this.messageSender.sendMessage({action: "openedExtension"});
+        this.messageSender.sendMessage({ action: "openedExtension" });
     }
 
     changeSelectedInput(): Promise<void> {
@@ -134,7 +134,6 @@ class ScriptsComunicator {
     }
 
     setTimeToSRC(time: Time): Promise<void> {
-        console.log(time);
         return this.messageSender.sendMessage({
             action: "setTime",
             time: time,
