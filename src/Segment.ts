@@ -271,14 +271,14 @@ class HTMLSegment {
 
     setStartTime(value: number | null) {
         this.segment.startTime = value;
-        if (this.segment.endTime) {
+        if (this.segment.endTime || this.segment.endTime == 0) {
             (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.toString();
         }
     }
 
     setEndTime(value: number | null) {
         this.segment.endTime = value;
-        if (this.segment.startTime) {
+        if (this.segment.startTime || this.segment.startTime == 0) {
             (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.toString();
         }
     }
@@ -393,6 +393,10 @@ class SegmentList {
         });
 
         return totalTime;
+    }
+
+    getInitialSegment() {
+        return this.segments[0].segment;
     }
 }
 

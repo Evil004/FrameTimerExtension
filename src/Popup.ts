@@ -35,7 +35,8 @@ function collectDataToSave() {
         selectedIndex: segmentList.getSelectedSegmentIndex(),
         framerate: parseFloat(ELEMENTS.framerateInput.value),
         videoTime: getVideoTime(),
-        calculatedTime: ELEMENTS.calculatedTimeText.value
+        calculatedTime: ELEMENTS.calculatedTimeText.value,
+        mode: ModeManager.getCurrentMode().name
     }
     return data
 }
@@ -47,6 +48,8 @@ function saveOnChange(e: Event) {
 }
 
 function restoreData(data: any) {
+    console.log(data)
+
     if (data) {
         if (data.segmentList.length == 0) {
             segmentList.generateDefaultSegment();
@@ -55,9 +58,9 @@ function restoreData(data: any) {
         }
 
         data.segmentList.forEach((segmentData: any) => {
-
+            debugger
             let segment = getSegmentInstancce(segmentData.type, segmentData.startTime, segmentData.endTime);
-            
+
             let segmentElement = HTMLSegmentFactory.createSegmentElement(segment);
             segmentList.addSegment(segmentElement);
 
@@ -68,14 +71,17 @@ function restoreData(data: any) {
         ELEMENTS.framerateInput.value = isNaN(data.framerate) ? "" : data.framerate;
         ELEMENTS.videoTimeInput.value = data.videoTime == 0 ? "0.0" : data.videoTime;
         ELEMENTS.calculatedTimeText.value = data.calculatedTime?.toString() ?? DEFAULT_TIME;
+
+        ModeManager.setCurrentMode(data.mode);
+        BUTTONS.switchMode.innerText = ModeManager.getCurrentMode().name;
     }
 }
 
 function generateModNote() {
-        let totalTime = Time.fromSeconds(segmentList.getTotalTime(),getFramerate());
-        let segmentsNote = segmentList.segments.map((segment) => {
-            return `${segment.segment.toString()}`
-        }).join(" + ");
+    let totalTime = Time.fromSeconds(segmentList.getTotalTime(), getFramerate());
+    let segmentsNote = segmentList.segments.map((segment) => {
+        return `${segment.segment.toString()}`
+    }).join(" + ");
 
 
     return `Mod Message: The sections ${segmentsNote}, at fps ${getFramerate()} add up to a final time of ${totalTime.toString()}`;

@@ -12,10 +12,14 @@ window.onload = async () => {
 }
 
 document.addEventListener("click", (e) => {
-    saveOnChange(e);
 
     NotificationManager.removeNotification();
 }, true);
+
+document.addEventListener("click", (e) => {
+    saveOnChange(e);
+
+});
 document.addEventListener("change", saveOnChange);
 
 document.addEventListener("input", saveOnChange);
@@ -131,3 +135,18 @@ BUTTONS.changeSRCTimeInputBtn.addEventListener('click', async (e) => {
         NotificationManager.setErrorNotification("Error when comunicating with SRC!")
     });
 });
+
+BUTTONS.switchMode.addEventListener('click', async (e) => {
+    if (await NotificationManager.showWarningModal("Are you sure you want to switch modes? This will erase your data")) {
+        ModeManager.switchMode();
+        ELEMENTS.framerateInput.value = "";
+        ELEMENTS.videoTimeInput.value = "0.0";
+        segmentList.clearSegments();
+        segmentList.generateDefaultSegment();
+        ELEMENTS.calculatedTimeText.value = DEFAULT_TIME;
+
+        browserController.removeFromStorage("data");
+    }
+    
+    BUTTONS.switchMode.innerText = ModeManager.getCurrentMode().name;
+})

@@ -68,6 +68,7 @@ const BUTTONS:{
     setFramerateTo60Btn: HTMLButtonElement;
     setFramerateTo30Btn: HTMLButtonElement;
     copyModNoteBtn: HTMLButtonElement;
+    switchMode: HTMLButtonElement;
 
 } = {
     calculateBtn: document.querySelector("#calculate-btn")!,
@@ -84,6 +85,7 @@ const BUTTONS:{
     setFramerateTo60Btn: document.querySelector("#sixty-framerate-btn")!,
     setFramerateTo30Btn: document.querySelector("#thirty-framerate-btn")!,
     copyModNoteBtn: document.querySelector("#copy-mod-note-btn")!,
+    switchMode: document.querySelector("#switch-mode")!,
 };
 
 

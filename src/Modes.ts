@@ -51,6 +51,26 @@ class SubstractMode extends Mode {
     getStartingSegment(): Segment {
         return new AdditiveSegment();
     }
+
+    async setEndTime(): Promise<void> {
+        let time = parseFloat(ELEMENTS.videoTimeInput.value);
+        const initialSegment = segmentList.getInitialSegment();
+        if (initialSegment && initialSegment.endTime && initialSegment.endTime < time) {
+            NotificationManager.setErrorNotification("End time can't be greater than the total time!");
+            return;
+        }
+        super.setEndTime();
+    }
+
+    async setStartTime(): Promise<void> {
+        let time = parseFloat(ELEMENTS.videoTimeInput.value);
+        const initialSegment = segmentList.getInitialSegment();
+        if (initialSegment && initialSegment.startTime && initialSegment.startTime > time) {
+            NotificationManager.setErrorNotification("Start time can't be lower than 0!");
+            return;
+        }
+        super.setStartTime();
+    }
 }
 
 class AdditiveMode extends Mode {
@@ -70,8 +90,17 @@ class AdditiveMode extends Mode {
 class ModeManager {
     private static currentMode: Mode;
 
-    static setCurrentMode(mode: Mode) {
-        this.currentMode = mode;
+    static setCurrentMode(modeName: String) {
+        switch (modeName) {
+            case "Additive":
+                this.currentMode = new AdditiveMode();
+                break;
+            case "Substract":
+                this.currentMode = new SubstractMode();
+                break;
+            default:
+                this.currentMode = new AdditiveMode();
+        }
     }
 
     static getCurrentMode(): Mode {
@@ -79,5 +108,14 @@ class ModeManager {
             this.currentMode = new AdditiveMode();
         }
         return this.currentMode;
+    }
+
+    static async switchMode() {
+        if (this.currentMode instanceof AdditiveMode) {
+            this.currentMode = new SubstractMode();
+        } else {
+            this.currentMode = new AdditiveMode();
+        }
+        console.log(this.currentMode.name);
     }
 }
