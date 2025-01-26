@@ -83,7 +83,7 @@ BUTTONS.resetAllBtn.addEventListener('click', async (e) => {
 });
 
 BUTTONS.addSegmentBtn.addEventListener('click', async (e) => {
-    segmentList.addSegment(HTMLSegmentFactory.createSegmentElement(new Segment(0)));
+    segmentList.addSegment(HTMLSegmentFactory.createSegmentElement(new SubtractiveSegment()));
 
 });
 

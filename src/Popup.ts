@@ -27,6 +27,7 @@ function collectDataToSave() {
         segmentList: segmentList.segments.map((segmentElement) => {
             let segment = segmentElement.segment
             return {
+                type: segment.constructor.name,
                 startTime: segment.startTime,
                 endTime: segment.endTime,
             }
@@ -53,8 +54,11 @@ function restoreData(data: any) {
             segmentList.clearSegments();
         }
 
-        data.segmentList.forEach((segment: any) => {
-            let segmentElement = HTMLSegmentFactory.createSegmentElement(new Segment(segment.startTime, segment.endTime));
+        data.segmentList.forEach((segmentData: any) => {
+
+            let segment = getSegmentInstancce(segmentData.type, segmentData.startTime, segmentData.endTime);
+            
+            let segmentElement = HTMLSegmentFactory.createSegmentElement(segment);
             segmentList.addSegment(segmentElement);
 
         });
@@ -70,7 +74,7 @@ function restoreData(data: any) {
 function generateModNote() {
         let totalTime = Time.fromSeconds(segmentList.getTotalTime(),getFramerate());
         let segmentsNote = segmentList.segments.map((segment) => {
-            return `${segment.segment.getCalculatedTime().toString()}`
+            return `${segment.segment.toString()}`
         }).join(" + ");
 
 

@@ -8,7 +8,7 @@ class Time {
         hours: number = 0,
         minutes: number = 0,
         seconds: number = 0,
-        milliseconds: number = 0
+        milliseconds: number = 0,
     ) {
         this.hours = hours;
         this.minutes = minutes;
@@ -17,6 +17,9 @@ class Time {
     }
 
     static fromSeconds(secondsTimestamp: number, framerate: number) {
+
+        secondsTimestamp= Math.abs(secondsTimestamp);
+
         let hours = Math.floor(secondsTimestamp / 3600);
         let minutes = Math.floor((secondsTimestamp % 3600) / 60);
         let seconds = Math.floor(secondsTimestamp % 60);
@@ -25,6 +28,7 @@ class Time {
                 Math.floor(secondsTimestamp % framerate)) *
             1000
         );
+
 
         return new Time(hours, minutes, seconds, milliseconds);
     }
@@ -35,47 +39,79 @@ class Time {
     }
 }
 
-class Segment {
-    private _startTime: number;
-    private _endTime: number | null;
 
-    constructor(startTime: number, endTime: number | null = null) {
-        this._startTime = startTime;
-        this._endTime = endTime;
+interface Segment {
+    startTime: number;
+    endTime: number | null;
+    time: Time;
+
+    getCalculatedTime(): Time;
+    getCalculatedSeconds(): number;
+    toString(): string;
+}
+
+class AdditiveSegment implements Segment {
+    startTime: number;
+    endTime: number | null;
+    time: Time;
+
+    constructor(startTime: number = 0, endTime: number | null = null) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.time = Time.fromSeconds(this.getCalculatedSeconds(), getFramerate());
+    }
+
+    getCalculatedTime() {
+        return Time.fromSeconds(this.getCalculatedSeconds(), getFramerate());
     }
 
     getCalculatedSeconds() {
         return Math.abs(
-            (this._endTime != null ? this._endTime : 0) - this._startTime
+            (this.endTime != null ? this.endTime : 0) - this.startTime
         );
     }
 
+    toString() {
+        return this.getCalculatedTime().toString();
+    }
+
+}
+
+class SubtractiveSegment implements Segment {
+    startTime: number;
+    endTime: number | null;
+    time: Time;
+
+    constructor(startTime: number = 0, endTime: number | null = null) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.time = Time.fromSeconds(this.getCalculatedSeconds(), getFramerate());
+    }
+
     getCalculatedTime() {
-        let framerate = getFramerate();
-        let seconds = this.getCalculatedSeconds();
-        return Time.fromSeconds(seconds, framerate);
-
+        return Time.fromSeconds(this.getCalculatedSeconds(), getFramerate());
     }
 
-    setStartTime(value: number) {
-        this._startTime = value;
+    getCalculatedSeconds() {
+        return Math.abs(this.startTime - this.endTime!)*-1;
     }
 
-    get startTime(): number {
-        return this._startTime;
+    toString() {
+        return this.getCalculatedTime().toString();
     }
+}
 
-    set startTime(value: number) {
-        this._startTime = value;
-    }
+const segmentTypeMap: { [key: string]: any } = {
+    'AdditiveSegment': AdditiveSegment,
+    'SubtractiveSegment': SubtractiveSegment
+};
 
-    get endTime(): number | null {
-        return this._endTime;
+function getSegmentInstancce(name: string, startTime: number = 0, endTime: number | null = null) {
+    const SegmentClass = segmentTypeMap[name];
+    if (typeof SegmentClass !== 'function') {
+        throw new Error(`Segment type ${name} is not a valid constructor`);
     }
-
-    set endTime(value: number | null) {
-        this._endTime = value;
-    }
+    return new SegmentClass(startTime, endTime);
 }
 
 class HTMLSegmentFactory {
@@ -94,14 +130,14 @@ class HTMLSegmentFactory {
         segmentText.appendChild(tooltip);
 
         segmentElement.addEventListener("mouseover", () => {
-            tooltip.querySelector(".startValue")!.textContent = segment.endTime ? Time.fromSeconds(segment.startTime, getFramerate()).toString(): "Not Set";
+            tooltip.querySelector(".startValue")!.textContent = segment.endTime ? Time.fromSeconds(segment.startTime, getFramerate()).toString() : "Not Set";
             tooltip.querySelector(".endValue")!.textContent = segment.endTime ? Time.fromSeconds(segment.endTime, getFramerate()).toString() : "Not Set";
 
             let segmentRect = segmentElement.getBoundingClientRect();
             let tooltipRect = tooltip.getBoundingClientRect();
 
-            tooltip.style.left = segmentRect.left + 'px';   
-            tooltip.style.top = segmentRect.bottom - tooltipRect.height- segmentRect.height - 3  + 'px';
+            tooltip.style.left = segmentRect.left + 'px';
+            tooltip.style.top = segmentRect.bottom - tooltipRect.height - segmentRect.height - 3 + 'px';
 
 
 
@@ -128,7 +164,7 @@ class HTMLSegmentFactory {
 
         try {
             if (segment.endTime && segment.startTime) {
-                valueSpan.innerText = segment.getCalculatedTime().toString();
+                valueSpan.innerText = segment.toString();
             } else {
                 valueSpan.innerText = DEFAULT_TIME;
             }
@@ -236,14 +272,15 @@ class HTMLSegment {
     setStartTime(value: number) {
         this.segment.startTime = value;
         if (this.segment.endTime) {
-            (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.getCalculatedTime().toString();
+            (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.toString();
         }
     }
 
     setEndTime(value: number | null) {
         this.segment.endTime = value;
+        console.log(this.segment.toString())
         if (this.segment.startTime) {
-            (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.getCalculatedTime().toString();
+            (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.toString();
         }
     }
 
@@ -343,7 +380,7 @@ class SegmentList {
     }
 
     generateDefaultSegment() {
-        let segmentElement = HTMLSegmentFactory.createSegmentElement(new Segment(0));
+        let segmentElement = HTMLSegmentFactory.createSegmentElement(new AdditiveSegment());
 
         segmentList.addSegment(segmentElement);
 
