@@ -138,11 +138,15 @@ BUTTONS.changeSRCTimeInputBtn.addEventListener('click', async (e) => {
 
 BUTTONS.switchMode.addEventListener('click', async (e) => {
     if (await NotificationManager.showWarningModal("Are you sure you want to switch modes? This will erase your data")) {
-        ModeManager.switchMode();
+        ModeManager.getCurrentMode().removeStyle();
+
+        await ModeManager.switchMode();
         ELEMENTS.framerateInput.value = "";
         ELEMENTS.videoTimeInput.value = "0.0";
         segmentList.clearSegments();
         segmentList.generateDefaultSegment();
+        ModeManager.getCurrentMode().setStyle();
+
         ELEMENTS.calculatedTimeText.value = DEFAULT_TIME;
 
         browserController.removeFromStorage("data");

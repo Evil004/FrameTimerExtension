@@ -37,12 +37,17 @@ abstract class Mode {
 
     abstract getSegment(): Segment;
     abstract getStartingSegment(): Segment;
+
+    abstract setStyle(): void;
+    abstract removeStyle(): void;
 }
 
 class SubstractMode extends Mode {
 
     constructor() {
         super("Substract");
+
+
     }
 
     getSegment(): Segment {
@@ -71,6 +76,20 @@ class SubstractMode extends Mode {
         }
         super.setStartTime();
     }
+
+    setStyle(): void {
+        let firstSegment = document.querySelector("#segments-container > *:first-child");
+        if (firstSegment) {
+            firstSegment.classList.add("divided-segment");
+        }
+    }
+
+    removeStyle(): void {
+        let firstSegment = document.querySelector("#segments-container > *:first-child");
+        if (firstSegment) {
+            firstSegment.classList.remove("divided-segment");
+        }
+    }
 }
 
 class AdditiveMode extends Mode {
@@ -85,12 +104,23 @@ class AdditiveMode extends Mode {
     getStartingSegment(): Segment {
         return new AdditiveSegment();
     }
+
+    setStyle(): void {
+
+    }
+
+    removeStyle(): void {
+
+    }
 }
 
 class ModeManager {
     private static currentMode: Mode;
 
     static setCurrentMode(modeName: String) {
+        if (this.currentMode) {
+            this.currentMode.removeStyle();
+        }
         switch (modeName) {
             case "Additive":
                 this.currentMode = new AdditiveMode();
@@ -101,16 +131,19 @@ class ModeManager {
             default:
                 this.currentMode = new AdditiveMode();
         }
+        this.currentMode.setStyle();
     }
 
     static getCurrentMode(): Mode {
         if (this.currentMode == null) {
             this.currentMode = new AdditiveMode();
+            this.currentMode.setStyle();
         }
         return this.currentMode;
     }
 
     static async switchMode() {
+        
         if (this.currentMode instanceof AdditiveMode) {
             this.currentMode = new SubstractMode();
         } else {
@@ -118,4 +151,5 @@ class ModeManager {
         }
         console.log(this.currentMode.name);
     }
+
 }

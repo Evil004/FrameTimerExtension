@@ -397,6 +397,10 @@ footer > * {
     visibility: visible;
 }
 
+.divided-segment {
+    border-bottom: 2px solid #f2f2f2;
+}
+
 /*
                                              *@@                  @@/           
                                            @@@@@@@%            (@@@@@@@         

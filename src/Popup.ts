@@ -74,6 +74,8 @@ function restoreData(data: any) {
 
         ModeManager.setCurrentMode(data.mode);
         BUTTONS.switchMode.innerText = ModeManager.getCurrentMode().name;
+    } else{
+        BUTTONS.switchMode.innerText = ModeManager.getCurrentMode().name;
     }
 }
 
