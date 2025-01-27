@@ -61,7 +61,10 @@ class SubstractMode extends Mode {
         let time = parseFloat(ELEMENTS.videoTimeInput.value);
         const initialSegment = segmentList.getInitialSegment();
         if (initialSegment && initialSegment.endTime && initialSegment.endTime < time) {
-            NotificationManager.setErrorNotification("End time can't be greater than the total time!");
+            NotificationManager.setErrorNotification("Time can't be greater than the end of the run!");
+            return;
+        } else if (initialSegment && initialSegment.startTime && initialSegment.startTime > time) {
+            NotificationManager.setErrorNotification("Time can't be lower than the start of the run!");
             return;
         }
         super.setEndTime();
@@ -71,7 +74,10 @@ class SubstractMode extends Mode {
         let time = parseFloat(ELEMENTS.videoTimeInput.value);
         const initialSegment = segmentList.getInitialSegment();
         if (initialSegment && initialSegment.startTime && initialSegment.startTime > time) {
-            NotificationManager.setErrorNotification("Start time can't be lower than 0!");
+            NotificationManager.setErrorNotification("Time can't be lower than the start of the run!");
+            return;
+        } else if (initialSegment && initialSegment.endTime && initialSegment.endTime < time) {
+            NotificationManager.setErrorNotification("Time can't be greater than the end of the run!");
             return;
         }
         super.setStartTime();
@@ -143,7 +149,7 @@ class ModeManager {
     }
 
     static async switchMode() {
-        
+
         if (this.currentMode instanceof AdditiveMode) {
             this.currentMode = new SubstractMode();
         } else {
