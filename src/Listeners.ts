@@ -78,11 +78,14 @@ BUTTONS.sendToSRCBtn.addEventListener('click', async (e) => {
 BUTTONS.resetAllBtn.addEventListener('click', async (e) => {
     e.preventDefault();
     if (await NotificationManager.showWarningModal("Are you sure you want to reset all data?")) {
+        ModeManager.getCurrentMode().removeStyle();
+
         ELEMENTS.framerateInput.value = "";
         ELEMENTS.videoTimeInput.value = "0.0";
         segmentList.clearSegments();
         segmentList.generateDefaultSegment();
         ELEMENTS.calculatedTimeText.value = DEFAULT_TIME;
+        ModeManager.getCurrentMode().setStyle();
 
         browserController.removeFromStorage("data");
     }
