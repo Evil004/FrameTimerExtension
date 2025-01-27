@@ -1,0 +1,102 @@
+// @ts-ignore
+function getFramerate() {
+    let framerate = DEFAULT_FRAMERATE;
+
+    if (ELEMENTS.framerateInput.value != "") {
+        framerate = parseFloat(ELEMENTS.framerateInput.value);
+    }
+
+    if (framerate <= 0) {
+        throw new Error(NOTIFICATION_MESSAGES.framerateUnderOrEqual0);
+    }
+    if (isNaN(framerate)) {
+        throw new Error(NOTIFICATION_MESSAGES.framerateIsNaN);
+    }
+
+    return framerate;
+}
+
+// @ts-ignore
+function getVideoTime() {
+    let time = parseFloat(ELEMENTS.videoTimeInput.value);
+    return isNaN(time) ? 0 : time;
+}
+
+function collectDataToSave() {
+    let data = {
+        segmentList: segmentList.segments.map((segmentElement) => {
+            let segment = segmentElement.segment
+            return {
+                type: segment.constructor.name,
+                startTime: segment.startTime,
+                endTime: segment.endTime,
+            }
+        }),
+        selectedIndex: segmentList.getSelectedSegmentIndex(),
+        framerate: parseFloat(ELEMENTS.framerateInput.value),
+        videoTime: getVideoTime(),
+        calculatedTime: ELEMENTS.calculatedTimeText.value,
+        mode: ModeManager.getCurrentMode().name
+    }
+    return data
+}
+function collectSettingsToSave() {
+    let data = {
+        theme: actualTheme
+    }
+    return data
+}
+
+function saveOnChange(e: Event) {
+    let data = collectDataToSave();
+    let settings = collectSettingsToSave();
+
+    browserController.setToStorage("data", data);
+    browserController.setToStorage("settings", settings);
+}
+
+function restoreData(data: any) {
+    if (data) {
+        if (data.segmentList.length == 0) {
+            segmentList.generateDefaultSegment();
+        } else {
+            segmentList.clearSegments();
+        }
+
+        data.segmentList.forEach((segmentData: any) => {
+            debugger
+            let segment = getSegmentInstancce(segmentData.type, segmentData.startTime, segmentData.endTime);
+
+            let segmentElement = HTMLSegmentFactory.createSegmentElement(segment);
+            segmentList.addSegment(segmentElement);
+
+        });
+
+        segmentList.setSegmentAsSelected(data.selectedIndex);
+
+        ELEMENTS.framerateInput.value = isNaN(data.framerate) ? "" : data.framerate;
+        ELEMENTS.videoTimeInput.value = data.videoTime == 0 ? "0.0" : data.videoTime;
+        ELEMENTS.calculatedTimeText.value = data.calculatedTime?.toString() ?? DEFAULT_TIME;
+
+        ModeManager.setCurrentMode(data.mode);
+    }
+}
+
+function restoreSettings(settings: any) {
+    if (settings) {
+        if (settings.theme) {
+            actualTheme = settings.theme;
+            setTheme(settings.theme.themeColors);
+            setActiveButton(document.getElementById(settings.theme.buttonId) as HTMLButtonElement);
+        }
+    }
+}
+
+function generateModNote() {
+    let totalTime = Time.fromSeconds(segmentList.getTotalTime(), getFramerate());
+    let segmentsNote = segmentList.segments.map((segment) => {
+        return `${segment.segment.toString()}`
+    }).join(" + ");
+
+    return `Mod Message: The sections ${segmentsNote}, at fps ${getFramerate()} add up to a final time of ${totalTime.toString()}`;
+}

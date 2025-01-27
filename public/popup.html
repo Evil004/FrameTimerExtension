@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Run-Timer</title>
-    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <link type="text/css" rel="stylesheet" href="style.css" />
 </head>
 <header>
     <h1>Run-Timer</h1>
@@ -13,13 +14,13 @@
 
 <div class="content">
     <div class="video-data">
-        <input type="text" id="framerate" placeholder="FRAMERATE"/>
+        <input type="text" id="framerate" placeholder="FRAMERATE" />
         <button id="sixty-framerate-btn">60</button>
         <button id="thirty-framerate-btn">30</button>
 
-        <br/>
+        <br />
         <label for="time-text">FRAME: </label>
-        <input type="text" id="time-text" value="0.0"/>
+        <input type="text" id="time-text" value="0.0" />
         <button id="exact-time-btn">Get Frame</button>
     </div>
 
@@ -41,21 +42,16 @@
     <div id="calculated-time-container">
         <label id="calculated-time-label" for="calculated-time">Calculated Time: </label>
         <div class="final-time-div">
-        <input
-                type="text"
-                id="calculated-time"
-                value="00h 00m 00s 000ms"
-                disabled
-        />
-        <button id="copy-btn" class="icon">
-            <p class="font-icon icon-files-empty"></p>
-        </button>
-        <button id="change-input-btn" class="icon">
-            <p class="font-icon icon-menu2"></p>
-        </button>
-        <button id="send-btn" class="icon">
-            <p class="font-icon icon-tab"></p>
-        </button>
+            <input type="text" id="calculated-time" value="00h 00m 00s 000ms" disabled />
+            <button id="copy-btn" class="icon">
+                <p class="font-icon icon-files-empty"></p>
+            </button>
+            <button id="change-input-btn" class="icon">
+                <p class="font-icon icon-menu2"></p>
+            </button>
+            <button id="send-btn" class="icon">
+                <p class="font-icon icon-tab"></p>
+            </button>
         </div>
 
         <button id="calculate-btn">Calculate</button>
@@ -68,9 +64,7 @@
         <p>
             THIS EXTENSION WAS MADE BY: NIA <span id="amp">&</span> EVIL
         </p>
-        <a href="https://www.buymeacoffee.com/evil004" target="_blank"
-        >Buy me a ☕︎</a
-        >
+        <a href="https://www.buymeacoffee.com/evil004" target="_blank">Buy me a ☕︎</a>
     </footer>
 </div>
 
@@ -98,29 +92,31 @@
         <h1>Settings</h1>
         <p id="close-config-btn" class="icon icon-cross"></p>
     </header>
-    <div>
+    <div id="mode-container">
         <label id="mode-label" class="settings-label">Mode:</label>
-        <button id="add-mode-btn" class="mode-active">Additive</button>
-        <button id="sub-mode-btn" class="">Subtractive</button>
+        <button id="additive-mode-btn" class="mode-active">Additive</button>
+        <button id="subtractive-mode-btn">Subtractive</button>
     </div>
-    <div>
+    <div id="theme-container">
         <label id="theme-label" class="settings-label">Theme:</label>
-        <button id="theme-a-btn" class="">ph-A</button>
-        <button id="theme-b-btn" class="mode-active">ph-B</button>
-        <button id="theme-c-btn" class="">ph-C</button>
-        <button id="theme-d-btn" class="">ph-D</button>
-        <button id="theme-e-btn" class="">ph-E</button>
-        <button id="theme-f-btn" class="">ph-F</button>
-        <button id="theme-g-btn" class="">ph-G</button>
+        <button id="theme-a-btn" class="mode-active">ph-A</button>
+        <button id="theme-b-btn">ph-B</button>
+        <button id="theme-c-btn">ph-C</button>
+        <button id="theme-d-btn">ph-D</button>
+        <button id="theme-e-btn">ph-E</button>
+        <button id="theme-f-btn">ph-F</button>
+        <button id="theme-g-btn">ph-G</button>
     </div>
 </div>
 
-<script src="scripts/PopupRefactored.js"></script>
+<script src="scripts/Popup.js"></script>
 <script src="scripts/utils/config.js"></script>
 <script src="scripts/Browser.js"></script>
 <script src="scripts/Notification.js"></script>
+<script src="scripts/Modes.js"></script>
 <script src="scripts/Segment.js"></script>
 <script src="scripts/Listeners.js"></script>
 <script src="scripts/Settings.js"></script>
 </body>
+
 </html>

@@ -8,7 +8,7 @@ class Time {
         hours: number = 0,
         minutes: number = 0,
         seconds: number = 0,
-        milliseconds: number = 0
+        milliseconds: number = 0,
     ) {
         this.hours = hours;
         this.minutes = minutes;
@@ -17,6 +17,9 @@ class Time {
     }
 
     static fromSeconds(secondsTimestamp: number, framerate: number) {
+
+        secondsTimestamp = Math.abs(secondsTimestamp);
+
         let hours = Math.floor(secondsTimestamp / 3600);
         let minutes = Math.floor((secondsTimestamp % 3600) / 60);
         let seconds = Math.floor(secondsTimestamp % 60);
@@ -25,6 +28,7 @@ class Time {
                 Math.floor(secondsTimestamp % framerate)) *
             1000
         );
+
 
         return new Time(hours, minutes, seconds, milliseconds);
     }
@@ -35,47 +39,79 @@ class Time {
     }
 }
 
-class Segment {
-    private _startTime: number;
-    private _endTime: number | null;
 
-    constructor(startTime: number, endTime: number | null = null) {
-        this._startTime = startTime;
-        this._endTime = endTime;
+interface Segment {
+    startTime: number | null;
+    endTime: number | null;
+    time: Time;
+
+    getCalculatedTime(): Time;
+    getCalculatedSeconds(): number;
+    toString(): string;
+}
+
+class AdditiveSegment implements Segment {
+    startTime: number | null;
+    endTime: number | null;
+    time: Time;
+
+    constructor(startTime: number | null = null, endTime: number | null = null) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.time = Time.fromSeconds(this.getCalculatedSeconds(), getFramerate());
+    }
+
+    getCalculatedTime() {
+        return Time.fromSeconds(this.getCalculatedSeconds(), getFramerate());
     }
 
     getCalculatedSeconds() {
         return Math.abs(
-            (this._endTime != null ? this._endTime : 0) - this._startTime
+            (this.endTime != null ? this.endTime : 0) - this.startTime!
         );
     }
 
+    toString() {
+        return this.getCalculatedTime().toString();
+    }
+
+}
+
+class SubtractiveSegment implements Segment {
+    startTime: number | null;
+    endTime: number | null;
+    time: Time;
+
+    constructor(startTime: number | null = null, endTime: number | null = null) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.time = Time.fromSeconds(this.getCalculatedSeconds(), getFramerate());
+    }
+
     getCalculatedTime() {
-        let framerate = getFramerate();
-        let seconds = this.getCalculatedSeconds();
-        return Time.fromSeconds(seconds, framerate);
-
+        return Time.fromSeconds(this.getCalculatedSeconds(), getFramerate());
     }
 
-    setStartTime(value: number) {
-        this._startTime = value;
+    getCalculatedSeconds() {
+        return Math.abs(this.startTime! - this.endTime!) * -1;
     }
 
-    get startTime(): number {
-        return this._startTime;
+    toString() {
+        return this.getCalculatedTime().toString();
     }
+}
 
-    set startTime(value: number) {
-        this._startTime = value;
-    }
+const segmentTypeMap: { [key: string]: any } = {
+    'AdditiveSegment': AdditiveSegment,
+    'SubtractiveSegment': SubtractiveSegment
+};
 
-    get endTime(): number | null {
-        return this._endTime;
+function getSegmentInstancce(name: string, startTime: number = 0, endTime: number | null = null) {
+    const SegmentClass = segmentTypeMap[name];
+    if (typeof SegmentClass !== 'function') {
+        throw new Error(`Segment type ${name} is not a valid constructor`);
     }
-
-    set endTime(value: number | null) {
-        this._endTime = value;
-    }
+    return new SegmentClass(startTime, endTime);
 }
 
 class HTMLSegmentFactory {
@@ -86,27 +122,42 @@ class HTMLSegmentFactory {
         let segmentText = this.createTimeSegmentElement(segment);
         let resetButton = this.createResetSegmentButton();
         let removeButton = this.createRemoveButton();
-        let tooltip = this.createTooltip(segment);
+        let tooltip = this.createTooltip();
 
         segmentElement.appendChild(segmentText);
         segmentElement.appendChild(resetButton);
         segmentElement.appendChild(removeButton);
-        segmentText.appendChild(tooltip);
+        segmentElement.appendChild(tooltip);
 
         segmentElement.addEventListener("mouseover", () => {
-            tooltip.querySelector(".startValue")!.textContent = segment.startTime ? Time.fromSeconds(segment.startTime, getFramerate()).toString() : "Start Not Set";
-            tooltip.querySelector(".endValue")!.textContent = segment.endTime ? Time.fromSeconds(segment.endTime, getFramerate()).toString() : "End Not Set";
+            tooltip.querySelector(".startValue")!.textContent = segment.startTime || segment.startTime == 0 ? Time.fromSeconds(segment.startTime, getFramerate()).toString() : "Start Not Set";
+            tooltip.querySelector(".endValue")!.textContent = segment.endTime || segment.endTime == 0 ? Time.fromSeconds(segment.endTime, getFramerate()).toString() : "End Not Set";
 
             let segmentRect = segmentElement.getBoundingClientRect();
             let tooltipRect = tooltip.getBoundingClientRect();
 
             tooltip.style.left = segmentRect.left + 'px';
-            tooltip.style.top = segmentRect.bottom - tooltipRect.height- segmentRect.height - 5  + 'px';
-
-
-
+            tooltip.style.top = segmentRect.bottom - tooltipRect.height - segmentRect.height + 'px';
         });
 
+        tooltip.querySelector(".tooltipStart")!.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            browserAction.setVideoTime(segment.startTime!).then(() => {
+                NotificationManager.setSuccessNotification("Time set!")
+            }).catch(() => {
+                NotificationManager.setErrorNotification("Error when comunicating with video player!")
+            });
+        })
+
+        tooltip.querySelector(".tooltipEnd")!.addEventListener("click", (e) => {
+            e.preventDefault();
+            browserAction.setVideoTime(segment.endTime!).then(() => {
+                NotificationManager.setSuccessNotification("Time set!")
+            }).catch(() => {
+                NotificationManager.setErrorNotification("Error when comunicating with video player!")
+            });
+        })
         return new HTMLSegment(segment, segmentElement);
     }
 
@@ -128,7 +179,7 @@ class HTMLSegmentFactory {
 
         try {
             if (segment.endTime && segment.startTime) {
-                valueSpan.innerText = segment.getCalculatedTime().toString();
+                valueSpan.innerText = segment.toString();
             } else {
                 valueSpan.innerText = DEFAULT_TIME;
             }
@@ -189,7 +240,7 @@ class HTMLSegmentFactory {
         return removeButton;
     }
 
-    static createTooltip(segment: Segment): HTMLSpanElement {
+    static createTooltip(): HTMLSpanElement {
         let tooltip = document.createElement("span");
         tooltip.classList.add("tooltip");
 
@@ -225,17 +276,17 @@ class HTMLSegment {
         document.querySelector("#segments-container")!.appendChild(element);
     }
 
-    setStartTime(value: number) {
+    setStartTime(value: number | null) {
         this.segment.startTime = value;
-        if (this.segment.endTime) {
-            (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.getCalculatedTime().toString();
+        if (this.segment.endTime || this.segment.endTime == 0) {
+            (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.toString();
         }
     }
 
     setEndTime(value: number | null) {
         this.segment.endTime = value;
-        if (this.segment.startTime) {
-            (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.getCalculatedTime().toString();
+        if (this.segment.startTime || this.segment.startTime == 0) {
+            (this.element.querySelector(".segment-value")! as HTMLButtonElement).innerText = this.segment.toString();
         }
     }
 
@@ -312,7 +363,7 @@ class SegmentList {
 
     resetSegment(index: number) {
         debugger
-        this.segments[index].setStartTime(0);
+        this.segments[index].setStartTime(null);
         this.segments[index].setEndTime(null);
         this.segments[index].element.querySelector(".segment-value")!.textContent = DEFAULT_TIME;
     }
@@ -335,7 +386,7 @@ class SegmentList {
     }
 
     generateDefaultSegment() {
-        let segmentElement = HTMLSegmentFactory.createSegmentElement(new Segment(0));
+        let segmentElement = HTMLSegmentFactory.createSegmentElement(ModeManager.getCurrentMode().getStartingSegment());
 
         segmentList.addSegment(segmentElement);
 
@@ -349,6 +400,10 @@ class SegmentList {
         });
 
         return totalTime;
+    }
+
+    getInitialSegment() {
+        return this.segments[0].segment;
     }
 }
 

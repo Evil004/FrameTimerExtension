@@ -36,8 +36,28 @@ type Theme = {
     [key: string]: string;
 };
 
+interface ThemeColors {
+    '--text': string;
+    '--text-2': string;
+    '--text5f': string;
+    '--bg': string;
+    '--bg-field': string;
+    '--bg-hover': string;
+    '--bg-hoveraa': string;
+    '--bg-click': string;
+    '--bg-selected': string;
+    '--link': string;
+}
+
+interface ActualTheme {
+    themeColors: ThemeColors;
+    buttonId: string;
+}
+
+let actualTheme: ActualTheme | null = null;
+
 document.getElementById('theme-a-btn')?.addEventListener('click', () => {
-    setTheme({
+    let themeColors = {
         '--text': '#f2f2f2',
         '--text-2': '#696969',
         '--text5f': '#f2f2f25f',
@@ -48,12 +68,14 @@ document.getElementById('theme-a-btn')?.addEventListener('click', () => {
         '--bg-click': '#787878',
         '--bg-selected': '#a39e9b',
         '--link': '#0465ec',
-    });
+    };
+    setTheme(themeColors);
     setActiveButton(document.getElementById('theme-a-btn') as HTMLButtonElement);
+    actualTheme = {themeColors: themeColors, buttonId: 'theme-a-btn'};
 });
 
 document.getElementById('theme-b-btn')?.addEventListener('click', () => {
-    setTheme({
+    let themeColors = {
         '--text': '#0f0f0f',
         '--text-2': '#969696',
         '--text5f': '#0f0f0f5f',
@@ -64,12 +86,15 @@ document.getElementById('theme-b-btn')?.addEventListener('click', () => {
         '--bg-click': '#878787',
         '--bg-selected': '#5c6164',
         '--link': '#0465ec',
-    });
+    };
+
+    setTheme(themeColors);
     setActiveButton(document.getElementById('theme-b-btn') as HTMLButtonElement);
+    actualTheme = {themeColors: themeColors, buttonId: 'theme-b-btn'};
 });
 
 document.getElementById('theme-c-btn')?.addEventListener('click', () => {
-    setTheme({
+    let themeColors = {
         '--text': '#eeeeee',
         '--text-2': '#495a65',
         '--text5f': '#eeeeee5f',
@@ -80,12 +105,14 @@ document.getElementById('theme-c-btn')?.addEventListener('click', () => {
         '--bg-click': '#5a6a74',
         '--bg-selected': '#72848f',
         '--link': '#d72323',
-    });
+    };
+    setTheme(themeColors);
     setActiveButton(document.getElementById('theme-c-btn') as HTMLButtonElement);
+    actualTheme = {themeColors: themeColors, buttonId: 'theme-c-btn'};
 });
 
 document.getElementById('theme-d-btn')?.addEventListener('click', () => {
-    setTheme({
+    let themeColors = {
         '--text': '#8e9fb7',
         '--text-2': '#3a4350',
         '--text5f': '#8e9fb75f',
@@ -96,12 +123,14 @@ document.getElementById('theme-d-btn')?.addEventListener('click', () => {
         '--bg-click': '#243348',
         '--bg-selected': '#121a25',
         '--link': '#ec7c04',
-    });
+    }
+    setTheme(themeColors);
     setActiveButton(document.getElementById('theme-d-btn') as HTMLButtonElement);
+    actualTheme = {themeColors: themeColors, buttonId: 'theme-d-btn'};
 });
 
 document.getElementById('theme-e-btn')?.addEventListener('click', () => {
-    setTheme({
+    let themeColors = {
         '--text': '#7b5635',
         '--text-2': '#d9b18f',
         '--text5f': '#7b56355f',
@@ -112,12 +141,14 @@ document.getElementById('theme-e-btn')?.addEventListener('click', () => {
         '--bg-click': '#ce9e75',
         '--bg-selected': '#c38957',
         '--link': '#ee971b',
-    });
+    };
+    setTheme(themeColors);
     setActiveButton(document.getElementById('theme-e-btn') as HTMLButtonElement);
+    actualTheme = {themeColors: themeColors, buttonId: 'theme-e-btn'};
 });
 
 document.getElementById('theme-f-btn')?.addEventListener('click', () => {
-    setTheme({
+    let themeColors = {
         '--text': '#f6ecf5',
         '--text-2': '#eaabe1',
         '--text5f': '#f6ecf55f',
@@ -128,12 +159,14 @@ document.getElementById('theme-f-btn')?.addEventListener('click', () => {
         '--bg-click': '#7c3071',
         '--bg-selected': '#65245b',
         '--link': '#9737e1',
-    });
+    };
+    setTheme(themeColors);
     setActiveButton(document.getElementById('theme-f-btn') as HTMLButtonElement);
+    actualTheme = {themeColors: themeColors, buttonId: 'theme-f-btn'};
 });
 
 document.getElementById('theme-g-btn')?.addEventListener('click', () => {
-    setTheme({
+    let themeColors = {
         '--text': '#dc4e64',
         '--text-2': '#722a3e',
         '--text5f': '#dc4e645f',
@@ -144,8 +177,10 @@ document.getElementById('theme-g-btn')?.addEventListener('click', () => {
         '--bg-click': '#7a3257',
         '--bg-selected': '#8b3260',
         '--link': '#821a6f',
-    });
+    }
+    setTheme(themeColors);
     setActiveButton(document.getElementById('theme-g-btn') as HTMLButtonElement);
+    actualTheme = {themeColors: themeColors, buttonId: 'theme-g-btn'};
 });
 
 function setTheme(theme: Theme): void {
@@ -155,7 +190,7 @@ function setTheme(theme: Theme): void {
 }
 
 function setActiveButton(activeButton: HTMLButtonElement): void {
-    const buttons = document.querySelectorAll('button');
+    const buttons = document.querySelectorAll('#theme-container > button');
     buttons.forEach((button: Element) => {
         button.classList.remove('mode-active');
     });

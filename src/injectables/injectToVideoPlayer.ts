@@ -2,6 +2,10 @@ let functionToInject = function (message: any, _sender: any, sendResponse: (resp
     if (message.action === "getExactTime") {
         let time = document.querySelector("video")!.currentTime;
         sendResponse(time.toString());
+    } else if (message.action === "setExactTime") {
+        let time = parseFloat(message.time);
+        document.querySelector("video")!.currentTime = time;
+        sendResponse("Time set");
     }
 
     sendResponse("No action found");

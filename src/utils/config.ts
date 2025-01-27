@@ -43,6 +43,7 @@ const ELEMENTS: {
     calculatedTimeText: HTMLInputElement;
     warningModal: HTMLDivElement;
     lock: HTMLDivElement;
+    tooltips: NodeListOf<Element>;
 } = {
     framerateInput: document.querySelector("#framerate")!,
     videoTimeInput: document.querySelector("#time-text")!,
@@ -51,6 +52,7 @@ const ELEMENTS: {
     calculatedTimeText: document.querySelector("#calculated-time")!,
     warningModal: document.querySelector("#warning")!,
     lock: document.querySelector("#lock")!,
+    tooltips: document.querySelectorAll(".tooltip")!,
 };
 
 const BUTTONS:{
@@ -71,7 +73,8 @@ const BUTTONS:{
     configBtn: HTMLButtonElement;
     configMenu: HTMLDivElement;
     closeConfigBtn: HTMLButtonElement;
-
+    additiveModeBtn: HTMLButtonElement;
+    subtractiveModeBtn: HTMLButtonElement;
 } = {
     calculateBtn: document.querySelector("#calculate-btn")!,
     copyBtn: document.querySelector("#copy-btn")!,
@@ -90,6 +93,8 @@ const BUTTONS:{
     configBtn: document.querySelector("#config-btn")!,
     configMenu: document.querySelector("#config-menu")!,
     closeConfigBtn: document.querySelector("#close-config-btn")!,
+    additiveModeBtn: document.querySelector("#additive-mode-btn")!,
+    subtractiveModeBtn: document.querySelector("#subtractive-mode-btn")!,
 };
 
 

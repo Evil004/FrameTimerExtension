@@ -26,9 +26,14 @@ function unselectAllTimeInputs() {
     selectedInput = {input: null, index: 0};
 }
 
+function scrollToElement(element: Element) {
+    element.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+}
+
 let respondToMessage = (request: any, _sender: any, sendResponse: (response?: any) => void) => {
     switch (request.action) {
         case "openedExtension":
+            scrollToElement(document.querySelector(".x-input-runtime-container")!);
             unselectAllTimeInputs();
             selectInput(0);
             sendResponse();
@@ -37,9 +42,10 @@ let respondToMessage = (request: any, _sender: any, sendResponse: (response?: an
             selectedInput.index = (selectedInput.index + 1) % document.querySelectorAll(".x-input-runtime-container").length;
             selectInput(selectedInput.index);
             sendResponse();
+            scrollToElement(selectedInput.input!);
+
             break;
         case "setTime":
-            console.log(request)
             try {
                 let {hours, minutes, seconds, milliseconds} = request.time;
 
@@ -64,7 +70,7 @@ let respondToMessage = (request: any, _sender: any, sendResponse: (response?: an
 
                 sendResponse({message: "success"});
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 sendResponse({message: "error"});
             }
             break;
