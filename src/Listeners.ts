@@ -154,6 +154,6 @@ BUTTONS.switchMode.addEventListener('click', async (e) => {
 
         browserController.removeFromStorage("data");
     }
-    
+
     BUTTONS.switchMode.innerText = ModeManager.getCurrentMode().name;
 })

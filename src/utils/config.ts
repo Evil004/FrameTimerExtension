@@ -43,6 +43,7 @@ const ELEMENTS: {
     calculatedTimeText: HTMLInputElement;
     warningModal: HTMLDivElement;
     lock: HTMLDivElement;
+    tooltips: NodeListOf<Element>;
 } = {
     framerateInput: document.querySelector("#framerate")!,
     videoTimeInput: document.querySelector("#time-text")!,
@@ -51,6 +52,7 @@ const ELEMENTS: {
     calculatedTimeText: document.querySelector("#calculated-time")!,
     warningModal: document.querySelector("#warning")!,
     lock: document.querySelector("#lock")!,
+    tooltips: document.querySelectorAll(".tooltip")!,
 };
 
 const BUTTONS:{

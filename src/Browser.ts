@@ -123,6 +123,13 @@ class ScriptsComunicator {
 
     }
 
+    setVideoTime(time: number): Promise<void> {
+        return this.messageSender.sendMessage({
+            action: "setExactTime",
+            time: time,
+        });
+    }
+
     sendOpenedExtensionMessage() {
         this.messageSender.sendMessage({ action: "openedExtension" });
     }

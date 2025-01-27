@@ -127,7 +127,7 @@ class HTMLSegmentFactory {
         segmentElement.appendChild(segmentText);
         segmentElement.appendChild(resetButton);
         segmentElement.appendChild(removeButton);
-        segmentText.appendChild(tooltip);
+        segmentElement.appendChild(tooltip);
 
         segmentElement.addEventListener("mouseover", () => {
             tooltip.querySelector(".startValue")!.textContent = segment.startTime || segment.startTime == 0 ? Time.fromSeconds(segment.startTime, getFramerate()).toString() : "Not Set";
@@ -137,12 +137,27 @@ class HTMLSegmentFactory {
             let tooltipRect = tooltip.getBoundingClientRect();
 
             tooltip.style.left = segmentRect.left + 'px';
-            tooltip.style.top = segmentRect.bottom - tooltipRect.height - segmentRect.height - 3 + 'px';
-
-
-
+            tooltip.style.top = segmentRect.bottom - tooltipRect.height - segmentRect.height + 'px';
         });
 
+        tooltip.querySelector(".tooltipStart")!.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            browserAction.setVideoTime(segment.startTime!).then(() => {
+                NotificationManager.setSuccessNotification("Time set!")
+            }).catch(() => {
+                NotificationManager.setErrorNotification("Error when comunicating with video player!")
+            });
+        })
+
+        tooltip.querySelector(".tooltipEnd")!.addEventListener("click", (e) => {
+            e.preventDefault();
+            browserAction.setVideoTime(segment.endTime!).then(() => {
+                NotificationManager.setSuccessNotification("Time set!")
+            }).catch(() => {
+                NotificationManager.setErrorNotification("Error when comunicating with video player!")
+            });
+        })
         return new HTMLSegment(segment, segmentElement);
     }
 

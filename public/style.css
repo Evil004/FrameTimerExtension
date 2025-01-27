@@ -393,7 +393,8 @@ footer > * {
 }
 
 
-.time-segment:hover > .tooltip {
+.time-segment:hover ~ .tooltip,
+.tooltip:hover {
     visibility: visible;
 }
 
