@@ -46,8 +46,6 @@ class SubstractMode extends Mode {
 
     constructor() {
         super("Substract");
-
-
     }
 
     getSegment(): Segment {
@@ -127,12 +125,19 @@ class ModeManager {
         if (this.currentMode) {
             this.currentMode.removeStyle();
         }
+
+        for (let modeButton of Array.from(document.querySelectorAll("#mode-container > button"))) {
+            modeButton.classList.remove("mode-active");
+        }
+
         switch (modeName) {
-            case "Additive":
+            case new AdditiveMode().name:
                 this.currentMode = new AdditiveMode();
+                BUTTONS.additiveModeBtn.classList.add("mode-active");
                 break;
-            case "Substract":
+            case new SubstractMode().name:
                 this.currentMode = new SubstractMode();
+                BUTTONS.subtractiveModeBtn.classList.add("mode-active");
                 break;
             default:
                 this.currentMode = new AdditiveMode();
@@ -146,16 +151,6 @@ class ModeManager {
             this.currentMode.setStyle();
         }
         return this.currentMode;
-    }
-
-    static async switchMode() {
-
-        if (this.currentMode instanceof AdditiveMode) {
-            this.currentMode = new SubstractMode();
-        } else {
-            this.currentMode = new AdditiveMode();
-        }
-        console.log(this.currentMode.name);
     }
 
 }

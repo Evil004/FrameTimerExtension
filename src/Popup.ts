@@ -40,16 +40,22 @@ function collectDataToSave() {
     }
     return data
 }
+function collectSettingsToSave() {
+    let data = {
+        theme: actualTheme
+    }
+    return data
+}
 
 function saveOnChange(e: Event) {
     let data = collectDataToSave();
+    let settings = collectSettingsToSave();
 
     browserController.setToStorage("data", data);
+    browserController.setToStorage("settings", settings);
 }
 
 function restoreData(data: any) {
-    console.log(data)
-
     if (data) {
         if (data.segmentList.length == 0) {
             segmentList.generateDefaultSegment();
@@ -73,9 +79,16 @@ function restoreData(data: any) {
         ELEMENTS.calculatedTimeText.value = data.calculatedTime?.toString() ?? DEFAULT_TIME;
 
         ModeManager.setCurrentMode(data.mode);
-        BUTTONS.switchMode.innerText = ModeManager.getCurrentMode().name;
-    } else{
-        BUTTONS.switchMode.innerText = ModeManager.getCurrentMode().name;
+    }
+}
+
+function restoreSettings(settings: any) {
+    if (settings) {
+        if (settings.theme) {
+            actualTheme = settings.theme;
+            setTheme(settings.theme.themeColors);
+            setActiveButton(document.getElementById(settings.theme.buttonId) as HTMLButtonElement);
+        }
     }
 }
 
@@ -84,7 +97,6 @@ function generateModNote() {
     let segmentsNote = segmentList.segments.map((segment) => {
         return `${segment.segment.toString()}`
     }).join(" + ");
-
 
     return `Mod Message: The sections ${segmentsNote}, at fps ${getFramerate()} add up to a final time of ${totalTime.toString()}`;
 }

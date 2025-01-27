@@ -1,12 +1,12 @@
 let browserAction = new ScriptsComunicator();
 let browserController = BrowserFactory.getBrowser();
 
-
-
 window.onload = async () => {
-    let response = await browserController.getFromStorage("data")
+    let dataResponse = await browserController.getFromStorage("data")
+    let settingsResponse = await browserController.getFromStorage("settings")
 
-    restoreData(response.data)
+    restoreData(dataResponse.data)
+    restoreSettings(settingsResponse.settings)
 
     browserAction.sendOpenedExtensionMessage()
 }
@@ -23,7 +23,6 @@ document.addEventListener("click", (e) => {
 document.addEventListener("change", saveOnChange);
 
 document.addEventListener("input", saveOnChange);
-
 
 BUTTONS.copyModNoteBtn.addEventListener('click', async (e) => {
     try {
@@ -139,11 +138,11 @@ BUTTONS.changeSRCTimeInputBtn.addEventListener('click', async (e) => {
     });
 });
 
-BUTTONS.switchMode.addEventListener('click', async (e) => {
+BUTTONS.additiveModeBtn.addEventListener('click', async (e) => {
     if (await NotificationManager.showWarningModal("Are you sure you want to switch modes? This will erase your data")) {
         ModeManager.getCurrentMode().removeStyle();
 
-        await ModeManager.switchMode();
+        ModeManager.setCurrentMode(new AdditiveMode().name);
         ELEMENTS.framerateInput.value = "";
         ELEMENTS.videoTimeInput.value = "0.0";
         segmentList.clearSegments();
@@ -154,6 +153,21 @@ BUTTONS.switchMode.addEventListener('click', async (e) => {
 
         browserController.removeFromStorage("data");
     }
+})
 
-    BUTTONS.switchMode.innerText = ModeManager.getCurrentMode().name;
+BUTTONS.subtractiveModeBtn.addEventListener('click', async (e) => {
+    if (await NotificationManager.showWarningModal("Are you sure you want to switch modes? This will erase your data")) {
+        ModeManager.getCurrentMode().removeStyle();
+
+        ModeManager.setCurrentMode(new SubstractMode().name);
+        ELEMENTS.framerateInput.value = "";
+        ELEMENTS.videoTimeInput.value = "0.0";
+        segmentList.clearSegments();
+        segmentList.generateDefaultSegment();
+        ModeManager.getCurrentMode().setStyle();
+
+        ELEMENTS.calculatedTimeText.value = DEFAULT_TIME;
+
+        browserController.removeFromStorage("data");
+    }
 })
