@@ -94,14 +94,14 @@ class HTMLSegmentFactory {
         segmentText.appendChild(tooltip);
 
         segmentElement.addEventListener("mouseover", () => {
-            tooltip.querySelector(".startValue")!.textContent = Time.fromSeconds(segment.startTime, getFramerate()).toString();
-            tooltip.querySelector(".endValue")!.textContent = segment.endTime ? Time.fromSeconds(segment.endTime, getFramerate()).toString() : "Not Set";
+            tooltip.querySelector(".startValue")!.textContent = segment.startTime ? Time.fromSeconds(segment.startTime, getFramerate()).toString() : "Start Not Set";
+            tooltip.querySelector(".endValue")!.textContent = segment.endTime ? Time.fromSeconds(segment.endTime, getFramerate()).toString() : "End Not Set";
 
             let segmentRect = segmentElement.getBoundingClientRect();
             let tooltipRect = tooltip.getBoundingClientRect();
 
             tooltip.style.left = segmentRect.left + 'px';
-            tooltip.style.top = segmentRect.bottom - tooltipRect.height- segmentRect.height - 3  + 'px';
+            tooltip.style.top = segmentRect.bottom - tooltipRect.height- segmentRect.height - 5  + 'px';
 
 
 
@@ -156,16 +156,16 @@ class HTMLSegmentFactory {
 
         });
 
-        let icon = this.createIcon("icons/reset.png");
+        let icon = this.createIcon("icon-spinner11");
         resetButton.appendChild(icon);
 
         return resetButton;
     }
 
-    static createIcon(imgPath: string): HTMLImageElement {
-        let icon = document.createElement("img");
-        icon.src = imgPath;
-
+    static createIcon(iconName: string): HTMLParagraphElement {
+        let icon = document.createElement("p");
+        icon.classList.add(iconName,"font-icon");
+    
         return icon;
     }
 
@@ -183,7 +183,7 @@ class HTMLSegmentFactory {
 
         });
 
-        let icon = this.createIcon("icons/remove.png");
+        let icon = this.createIcon("icon-minus");
         removeButton.appendChild(icon);
 
         return removeButton;
@@ -196,10 +196,6 @@ class HTMLSegmentFactory {
         let start = document.createElement("p")
         start.classList.add("tooltipStart");
 
-        let startLabel = document.createElement("span");
-        startLabel.textContent = "Start: ";
-        start.appendChild(startLabel);
-
         let startValue = document.createElement("span");
         startValue.classList.add("startValue");
         start.appendChild(startValue);
@@ -208,10 +204,6 @@ class HTMLSegmentFactory {
 
         let end = document.createElement("p")
         end.classList.add("tooltipEnd");
-
-        let endLabel = document.createElement("span");
-        endLabel.textContent = "End: ";
-        end.appendChild(endLabel);
 
         let endValue = document.createElement("span");
         endValue.classList.add("endValue");

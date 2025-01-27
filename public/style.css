@@ -1,3 +1,23 @@
+@import url('icons/icomoon.css');
+
+:root {
+    --text: #f2f2f2;
+    --text5f: #f2f2f25f;
+    --text-2: #696969;
+    --bg: #0f0f0f;
+    --bg-field: #272727;
+    --bg-hover: #464646;
+    --bg-hoveraa: #464646aa;
+    --bg-click: #787878;
+    --bg-selected: #a39e9b;
+    --link: #0067dd;
+    --red: #ff3e30;
+    --green: #00ae52;
+    --blue: #0067dd;
+    --orange: #ffaa0d;
+    --orange-dark: #db8f00;
+}
+
 @font-face {
     font-family: helsinkiOrig;
     src: url(helsinki.ttf);
@@ -26,7 +46,7 @@ label {
 button {
     background: none;
     border: none;
-    color: #fafafa;
+    color: var(--text);
 
     font-family: helsinkiOrig;
     font-size: 20px;
@@ -36,15 +56,15 @@ button {
 }
 
 button:hover {
-    background-color: #272727;
+    background-color: var(--bg-field);
 }
 
 body {
     margin: 0px;
     width: 425px;
     height: 550px;
-    background-color: #0f0f0f;
-    color: #f2f2f2;
+    background-color: var(--bg);
+    color: var(--text);
     font-family: helsinkiOrig;
 
     margin-bottom: 4px;
@@ -66,12 +86,12 @@ h1 {
 }
 
 button:active {
-    background-color: #484848;
+    background-color: var(--bg-click);
 }
 
 input[type="text"] {
-    background-color: #272727;
-    color: #f2f2f2;
+    background-color: var(--bg-field);
+    color: var(--text);
     border: 0;
     font-size: 20px;
     font-family: helsinkiOrig;
@@ -90,7 +110,7 @@ input[type="text"] {
 
 #time-text {
     width: 110px;
-    color: #fafafa;
+    color: var(--text);
 }
 
 .time-segment {
@@ -98,27 +118,27 @@ input[type="text"] {
 
     vertical-align: middle;
 
-    background-color: #272727;
+    background-color: var(--bg-field);
 }
 
 .time-segment:hover > .segment-value {
-    background-color: #303030;
+    background-color: var(--bg-hover);
 }
 
 .time-segment:hover {
-    background-color: #444444;
+    background-color: var(--bg-click);
 }
 
 .segment.selected > .time-segment {
-    background-color: #838383;
+    background-color: var(--bg-selected);
 }
 
 .time-segment:active {
-    background-color: #484848;
+    background-color: var(--bg-click);
 }
 
 .time-segment:active > .segment-value {
-    background-color: #484848;
+    background-color: var(--bg-click);
 }
 
 .content {
@@ -126,7 +146,7 @@ input[type="text"] {
 }
 
 .ErrorMessage {
-    background-color: #0f0f0f;
+    background-color: var(--bg);
     width: 100%;
     height: 30px;
     position: fixed;
@@ -145,15 +165,15 @@ input[type="text"] {
 }
 
 .error {
-    color: #ff3e30;
+    color: var(--red);
 }
 
 .success {
-    color: #00ae52;
+    color: var(--green);
 }
 
 .info {
-    color: #0067dd;
+    color: var(--blue);
 }
 
 img {
@@ -167,6 +187,98 @@ img {
     width: 37px;
     height: 37px;
     vertical-align: middle;
+    color: var(--text);
+    font-size: 37px;
+    text-decoration: none;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    display: flex;
+    align-items: center;
+}
+
+#config-btn {
+    transform-origin: center;
+    transition: transform 0.3s ease;
+    transform: scale(1);
+    cursor: pointer;
+    color: var(--text);
+}
+
+#close-config-btn {
+    margin-right: 15px;
+    font-size: 22px;
+    transform-origin: center;
+    transition: transform 0.5s ease-in-out, color 0.5s ease-in-out; /* Smooth transition */
+    transform: scale(1) rotate(0deg); /* Start at default scale and rotation */
+    width: 22px;
+    height: 22px;
+    color: var(--text);
+}
+
+#close-config-btn:hover {
+    transform: scale(1.35) rotate(180deg); /* Scale and spin on hover */
+    transition: transform 0.5s ease-in-out, color 0.5s ease-in-out; /* Matches the hover effect */
+    color: var(--red);
+}
+
+#close-config-btn:active {
+    transform: scale(1.25) rotate(180deg);
+    transition: transform 0.1s ease-in-out;
+}
+
+#config-btn:hover {
+    padding: 6px;
+    width: 37px;
+    height: 37px;
+    vertical-align: middle;
+    color: var(--text);
+    font-size: 37px;
+    text-decoration: none;
+    display: inline-block;
+    transform: scale(1.2);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(-45deg, var(--text), var(--text), var(--bg-click), var(--text), var(--text));
+    background-size: 200% 100%;
+    background-clip: text;
+    color: transparent;
+    transition: background-position 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    animation: moveGradient 1s linear 0s infinite;
+}
+
+.font-icon {
+    font-size: 25px;
+    margin: 0px;
+}
+
+.segment {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#calculated-time-container {
+    margin-top: 10px;
+}
+
+.final-time-div {
+    display: flex;
+    flex-direction: row;
+    margin: 0px;
+    align-items: center;
+}
+
+::placeholder {
+    color: var(--text-2);
+}
+
+@keyframes moveGradient {
+  0% {
+    background-position: 200% 0%;
+  }
+  100% {
+    background-position: 0% 200%;
+  }
 }
 
 #add-btn {
@@ -184,11 +296,11 @@ p {
 
 a {
     font-size: 20px;
-    color: #0465ec;
+    color: var(--link);
 }
 
 a:visited {
-    color: #0465ec;
+    color: var(--link);
 }
 
 ::-webkit-scrollbar {
@@ -202,7 +314,7 @@ a:visited {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #888;
+    background: var(--bg-selected);
     border-radius: 10px;
 
     margin: 15px;
@@ -210,7 +322,7 @@ a:visited {
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--bg-click);
 }
 
 footer {
@@ -229,9 +341,9 @@ footer > * {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 426px;
-    height: 30%;
-    color: #fafafa;
-    background-color: #0f0f0f;
+    height: auto;
+    color: var(--text);
+    background-color: var(--bg);
 
     z-index: 10;
     padding: 0px;
@@ -241,8 +353,8 @@ footer > * {
     /* Meow */
     visibility: hidden;
 
-    border: 4px solid #fafafa;
-    outline: 3px solid rgb(255, 165, 0);
+    border: 4px solid var(--text);
+    outline: 3px solid var(--orange);
     outline-offset: -1px;
 
     border-top: 0px;
@@ -290,7 +402,7 @@ footer > * {
 
     margin: 0;
 
-    background-color: hwb(0 0% 100% / 0.65);
+    background-color: rgba(0, 0, 0, 0.65);
 }
 
 #lock[style="visibility: visible;"] {
@@ -322,24 +434,32 @@ footer > * {
 }
 
 .title-container {
-    margin-left: 20px;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .warning-icon {
     width: 50px;
     height: 50px;
     margin-right: 10px;
+    font-size: 45px;
+    color: var(--orange);
+}
+
+#modal-content.modal-text {
+    font-size: 18px;
+    margin-bottom: 15px;
 }
 
 .warning-title {
     text-align: center;
     font-weight: normal;
-    font-size: 28px;
+    font-size: 30px;
     margin: 0;
-    color: #fee5c7;
+    color: var(--orange);
+
 }
 
 .warning-text {
@@ -348,15 +468,16 @@ footer > * {
 
 #warning > button {
     margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 #warning-yes-btn {
-    background-color: #fee5c7;
-    color: #0f0f0f;
+    background-color: var(--orange);
+    color: var(--bg);
 }
 
 #warning-yes-btn:hover {
-    background-color: #e9c79e;
+    background-color: var(--orange-dark);
 }
 
 .hidden {
@@ -364,15 +485,22 @@ footer > * {
 }
 
 .tooltip {
+    display: flex;
+    flex-direction: column;
     visibility: hidden;
 
-    background-color: #272727;
-    color: #f2f2f2;
+    backdrop-filter: blur(4px);
+    background-color: var(--bg-hoveraa);    
+    color: var(--text);
     border-radius: 5px;
-    padding: 5px;
     font-size: 9px;
     width: fit-content;
     text-align: center;
+
+    box-sizing: border-box;
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
 
 
     position: absolute;
@@ -382,19 +510,58 @@ footer > * {
 .tooltip > * {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
     margin: 0;
     padding: 5px;
 }
 
-.tooltipStart {
-    border-bottom: 1px solid #f2f2f2;
+.tooltip .tooltipStart {
+    display: flex;
+    flex-direction: column;
 }
 
+.tooltipStart::after {
+    content: '';
+    display: block;
+    width: 90%;
+    height: 1px;
+    background-color: var(--text5f);
+    margin: 0 auto;
+    position: relative;
+    top: 5px;
+}
 
 .time-segment:hover > .tooltip {
     visibility: visible;
+}
+
+#config-menu {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: -500%;
+    left: 0;
+    background-color: var(--bg);
+    filter: blur(500px);
+    transition: filter 0.3s ease-in 0.1s, top 0.2s ease 0.4s, transform 0.2s ease 0.1s;
+    z-index: 777;
+    transform: scale(0.95);
+}
+
+button.mode-active {
+    background-color: var(--bg-click);
+}
+
+#config-menu.open {
+    top: 0;
+    filter: blur(0px);
+    transition: filter 0.3s ease-out 0.1s, transform 0.2s ease 0.1s;
+    transform: scale(1);
+}
+
+.settings-label {
+    margin-left: 10px;
 }
 
 /*

@@ -93,7 +93,7 @@ BUTTONS.setStartTimeBtn.addEventListener('click', async (e) => {
 
     try {
         let time = parseFloat(ELEMENTS.videoTimeInput.value);
-        if (segmentList.getSelectedSegment().segment.startTime  && segmentList.getSelectedSegment().segment.startTime != time) {
+        if (segmentList.getSelectedSegment().segment.startTime && segmentList.getSelectedSegment().segment.startTime != time) {
             if (!await NotificationManager.showWarningModal("Are you sure you want to overwrite the start time?")) {
                 return;
             }

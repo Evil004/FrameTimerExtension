@@ -8,13 +8,7 @@
 </head>
 <header>
     <h1>Run-Timer</h1>
-
-    <a
-            href="https://github.com/Evil004/FrameTimerExtension/wiki"
-            class="icon"
-            target="_blank"
-    ><img src="icons/About.png" id="about-btn" class="icon"
-    /></a>
+    <p id="config-btn" class="icon icon-cogs"></p>
 </header>
 
 <div class="content">
@@ -40,12 +34,13 @@
 
     <div>
         <button id="add-segment-btn" class="icon">
-            <img src="icons/plus.png"/>
+            <p id="add-btn" class="font-icon icon-plus"></p>
         </button>
     </div>
 
     <div id="calculated-time-container">
-        <label for="calculated-time">Calculated Time: </label>
+        <label id="calculated-time-label" for="calculated-time">Calculated Time: </label>
+        <div class="final-time-div">
         <input
                 type="text"
                 id="calculated-time"
@@ -53,14 +48,15 @@
                 disabled
         />
         <button id="copy-btn" class="icon">
-            <img src="icons/clipboard.png"/>
+            <p class="font-icon icon-files-empty"></p>
         </button>
         <button id="change-input-btn" class="icon">
-            <img src="icons/swap.png"/>
+            <p class="font-icon icon-menu2"></p>
         </button>
         <button id="send-btn" class="icon">
-            <img src="icons/transfer_icon.png"/>
+            <p class="font-icon icon-tab"></p>
         </button>
+        </div>
 
         <button id="calculate-btn">Calculate</button>
         <button id="copy-mod-note-btn">Mod Note</button>
@@ -80,7 +76,7 @@
 
 <div id="warning" class="warning-container">
     <div class="title-container">
-        <img src="icons/warning.png" id="warning-icon" class="warning-icon"></img>
+        <p id="warning-icon" class="warning-icon icon-warning"></p>
         <h1 id="warning-title" class="warning-title">WARNING</h1>
     </div>
     <p id="modal-content" class="modal-text">
@@ -97,11 +93,34 @@
     <p id="notification-message"></p>
 </div>
 
+<div id="config-menu" class="config-menu">
+    <header>
+        <h1>Settings</h1>
+        <p id="close-config-btn" class="icon icon-cross"></p>
+    </header>
+    <div>
+        <label id="mode-label" class="settings-label">Mode:</label>
+        <button id="add-mode-btn" class="mode-active">Additive</button>
+        <button id="sub-mode-btn" class="">Subtractive</button>
+    </div>
+    <div>
+        <label id="theme-label" class="settings-label">Theme:</label>
+        <button id="theme-a-btn" class="">ph-A</button>
+        <button id="theme-b-btn" class="mode-active">ph-B</button>
+        <button id="theme-c-btn" class="">ph-C</button>
+        <button id="theme-d-btn" class="">ph-D</button>
+        <button id="theme-e-btn" class="">ph-E</button>
+        <button id="theme-f-btn" class="">ph-F</button>
+        <button id="theme-g-btn" class="">ph-G</button>
+    </div>
+</div>
+
 <script src="scripts/PopupRefactored.js"></script>
 <script src="scripts/utils/config.js"></script>
 <script src="scripts/Browser.js"></script>
 <script src="scripts/Notification.js"></script>
 <script src="scripts/Segment.js"></script>
 <script src="scripts/Listeners.js"></script>
+<script src="scripts/Settings.js"></script>
 </body>
 </html>
