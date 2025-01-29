@@ -58,26 +58,73 @@ class SubstractMode extends Mode {
     async setEndTime(): Promise<void> {
         let time = parseFloat(ELEMENTS.videoTimeInput.value);
         const initialSegment = segmentList.getInitialSegment();
-        if (initialSegment && initialSegment.endTime && initialSegment.endTime < time) {
-            NotificationManager.setErrorNotification("Time can't be greater than the end of the run!");
-            return;
-        } else if (initialSegment && initialSegment.startTime && initialSegment.startTime > time) {
-            NotificationManager.setErrorNotification("Time can't be lower than the start of the run!");
-            return;
+
+        let selectedSegmentIndex = segmentList.getSelectedSegmentIndex();
+
+        if (selectedSegmentIndex == 0) {
+            if (initialSegment && initialSegment.startTime && initialSegment.startTime > time) {
+                NotificationManager.setErrorNotification("Time can't be lower than the start of the run!");
+                return;
+            }
+
+            const minStartTime = segmentList.segments.slice(1).filter(s => s.segment.startTime).reduce((min, segment) =>
+                Math.min(min, segment.segment.startTime!), Infinity);
+            const maxEndTime = segmentList.segments.slice(1).filter(s => s.segment.endTime).reduce((min, segment) =>
+                Math.min(min, segment.segment.endTime!), Infinity);
+
+            if (time < maxEndTime) {
+                NotificationManager.setErrorNotification("Time can't be greater than the maximum end time!");
+                return;
+            }
+
+        } else {
+            if (initialSegment && initialSegment.startTime && initialSegment.startTime > time) {
+                NotificationManager.setErrorNotification("Time can't be lower than the start of the run!");
+                return;
+            } else if (initialSegment && initialSegment.endTime && initialSegment.endTime < time) {
+                NotificationManager.setErrorNotification("Time can't be greater than the end of the run!");
+                return;
+            }
         }
+
+
         super.setEndTime();
     }
 
     async setStartTime(): Promise<void> {
         let time = parseFloat(ELEMENTS.videoTimeInput.value);
         const initialSegment = segmentList.getInitialSegment();
-        if (initialSegment && initialSegment.startTime && initialSegment.startTime > time) {
-            NotificationManager.setErrorNotification("Time can't be lower than the start of the run!");
-            return;
-        } else if (initialSegment && initialSegment.endTime && initialSegment.endTime < time) {
-            NotificationManager.setErrorNotification("Time can't be greater than the end of the run!");
-            return;
+
+        let selectedSegmentIndex = segmentList.getSelectedSegmentIndex();
+
+        if (selectedSegmentIndex == 0) {
+            if (initialSegment && initialSegment.endTime && initialSegment.endTime < time) {
+                NotificationManager.setErrorNotification("Time can't be greater than the end of the run!");
+                return;
+            }
+
+            const minStartTime = segmentList.segments.slice(1).filter(s => s.segment.startTime).reduce((min, segment) =>
+                Math.min(min, segment.segment.startTime!), Infinity);
+            const maxEndTime = segmentList.segments.slice(1).filter(s => s.segment.endTime).reduce((min, segment) =>
+                Math.min(min, segment.segment.endTime!), Infinity);
+
+            if (time > minStartTime) {
+                NotificationManager.setErrorNotification("Time can't be lower than the minimum start time!");
+                return;
+            }
+
+
+        } else {
+            if (initialSegment && initialSegment.startTime && initialSegment.startTime > time) {
+                NotificationManager.setErrorNotification("Time can't be lower than the start of the run!");
+                return;
+            } else if (initialSegment && initialSegment.endTime && initialSegment.endTime < time) {
+                NotificationManager.setErrorNotification("Time can't be greater than the end of the run!");
+                return;
+            }
         }
+
+
         super.setStartTime();
     }
 
