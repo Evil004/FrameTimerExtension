@@ -75,6 +75,8 @@ const BUTTONS:{
     closeConfigBtn: HTMLButtonElement;
     additiveModeBtn: HTMLButtonElement;
     subtractiveModeBtn: HTMLButtonElement;
+    nextFrameBtn: HTMLButtonElement;
+    previousFrameBtn: HTMLButtonElement;
 } = {
     calculateBtn: document.querySelector("#calculate-btn")!,
     copyBtn: document.querySelector("#copy-btn")!,
@@ -95,6 +97,8 @@ const BUTTONS:{
     closeConfigBtn: document.querySelector("#close-config-btn")!,
     additiveModeBtn: document.querySelector("#additive-mode-btn")!,
     subtractiveModeBtn: document.querySelector("#subtractive-mode-btn")!,
+    nextFrameBtn: document.querySelector("#next-frame")!,
+    previousFrameBtn: document.querySelector("#previous-frame")!,
 };
 
 

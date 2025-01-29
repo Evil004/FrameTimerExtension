@@ -171,3 +171,19 @@ BUTTONS.subtractiveModeBtn.addEventListener('click', async (e) => {
         browserController.removeFromStorage("data");
     }
 })
+
+BUTTONS.nextFrameBtn.addEventListener('click', async (e) => {
+    browserAction.nextFrame(getFramerate()).then(() => {
+        NotificationManager.setSuccessNotification("Time set!")
+    }).catch(() => {
+        NotificationManager.setErrorNotification("Error when comunicating with the video player!")
+    });
+});
+
+BUTTONS.previousFrameBtn.addEventListener('click', async (e) => {
+    browserAction.previousFrame(getFramerate()).then(() => {
+        NotificationManager.setSuccessNotification("Time set!")
+    }).catch(() => {
+        NotificationManager.setErrorNotification("Error when comunicating with the video player!")
+    });
+});

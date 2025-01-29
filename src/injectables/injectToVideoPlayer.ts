@@ -6,6 +6,16 @@ let functionToInject = function (message: any, _sender: any, sendResponse: (resp
         let time = parseFloat(message.time);
         document.querySelector("video")!.currentTime = time;
         sendResponse("Time set");
+    } else if (message.action === "nextFrame") {
+        let framerate = parseInt(message.framerate);
+        let video = document.querySelector("video")!;
+        video.currentTime = video.currentTime + 1 / framerate;
+        sendResponse("Frame changed");
+    } else if (message.action === "previousFrame") {
+        let framerate = parseInt(message.framerate);
+        let video = document.querySelector("video")!;
+        video.currentTime = video.currentTime - 1 / framerate;
+        sendResponse("Frame changed");
     }
 
     sendResponse("No action found");

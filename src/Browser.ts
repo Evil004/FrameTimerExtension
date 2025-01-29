@@ -146,4 +146,18 @@ class ScriptsComunicator {
             time: time,
         });
     }
+
+    nextFrame(framerate: number): Promise<void> {
+        return this.messageSender.sendMessage({
+            action: "nextFrame",
+            framerate: framerate,
+        });
+    }
+
+    previousFrame(framerate: number): Promise<void> {
+        return this.messageSender.sendMessage({
+            action: "previousFrame",
+            framerate: framerate,
+        });
+    }
 }
