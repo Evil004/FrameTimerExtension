@@ -4,8 +4,12 @@
   "description": "![Run-Timer Logo](./.github/imgs/Run-Timer_Baner.png)",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && mkdirp dist && copyfiles -u 1 \"public/**/*\" dist && npx tsc",
-    "dev": "rimraf dist && mkdirp dist && copyfiles -u 1 \"public/**/*\" dist && npx tsc -w"
+    "clean": "rimraf dist && mkdirp dist",
+    "copy": "copyfiles -u 1 \"public/**/*\" dist",
+    "build": "npm run clean && npm run copy && npx tsc",
+    "build:dev": "npm run build && npm run open:reload",
+    "dev": "nodemon --watch . --ignore dist/ --ext ts,html,css --exec npm run build:dev",
+    "open:reload": "npx open-cli http://reload.extensions"
   },
   "repository": {
     "type": "git",
@@ -22,10 +26,8 @@
     "@types/firefox-webext-browser": "^120.0.3",
     "copyfiles": "^2.4.1",
     "mkdirp": "^3.0.1",
-    "copyfiles": "^2.4.1",
-    "mkdirp": "^3.0.1",
     "nodemon": "^3.1.0",
-    "rimraf": "^6.0.1",
+    "open-cli": "^8.0.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
